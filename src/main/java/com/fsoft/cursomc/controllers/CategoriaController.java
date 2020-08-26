@@ -11,19 +11,15 @@ import com.fsoft.cursomc.models.Categoria;
 import com.fsoft.cursomc.services.CategoriaService;
 
 @RestController
-@RequestMapping(value="/categorias")
+@RequestMapping(value = "/categorias")
 public class CategoriaController {
 
 	@Autowired
 	private CategoriaService service;
-	
-	@GetMapping(value="/{id}")
+
+	@GetMapping(value = "/{id}")
 	public ResponseEntity<Categoria> find(@PathVariable Integer id) {
-		try {
-			Categoria categoria = service.find(id);
-			return ResponseEntity.ok(categoria);
-		} catch (Exception e) {
-			return null;
-		}
+		Categoria categoria = service.find(id);
+		return ResponseEntity.ok(categoria);
 	}
 }
