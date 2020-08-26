@@ -26,11 +26,11 @@ import com.fsoft.cursomc.models.enums.TipoCliente;
 import com.fsoft.cursomc.repositories.CategoriaRepository;
 import com.fsoft.cursomc.repositories.CidadeRepository;
 import com.fsoft.cursomc.repositories.ClienteRepository;
-import com.fsoft.cursomc.repositories.EnderecoRespository;
+import com.fsoft.cursomc.repositories.EnderecoRepository;
 import com.fsoft.cursomc.repositories.EstadoRepository;
 import com.fsoft.cursomc.repositories.ItemPedidoRepository;
 import com.fsoft.cursomc.repositories.PagamentoRepository;
-import com.fsoft.cursomc.repositories.PedidoRespository;
+import com.fsoft.cursomc.repositories.PedidoRepository;
 import com.fsoft.cursomc.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -52,10 +52,10 @@ public class CursomcApplication implements CommandLineRunner {
 	private ClienteRepository clienteRepository;
 
 	@Autowired
-	private EnderecoRespository enderecoRespository;
+	private EnderecoRepository enderecoRespository;
 
 	@Autowired
-	private PedidoRespository pedidoRespository;
+	private PedidoRepository pedidoRespository;
 
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
