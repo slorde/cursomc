@@ -7,8 +7,12 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.fsoft.cursomc.dto.CategoriaDTO;
 import com.fsoft.cursomc.exceptions.DataIntegrityException;
 import com.fsoft.cursomc.exceptions.NotFoundException;
 import com.fsoft.cursomc.models.Categoria;
@@ -29,6 +33,10 @@ public class CategoriaService {
 	public Categoria create(Categoria categoria) {
 		return repository.save(categoria);
 	}
+	
+	public Categoria fromDTO(CategoriaDTO categoriaDTO) {
+		return new Categoria(categoriaDTO.getNome());
+	}
 
 	public void update(Categoria categoria) {
 		find(categoria.getId());
@@ -46,5 +54,10 @@ public class CategoriaService {
 
 	public List<Categoria> findAll() {
 		return repository.findAll();
+	}
+	
+	public Page<Categoria> findPage(Integer page, Integer limit, String orderBy, String direction) {
+		PageRequest pageRequest = PageRequest.of(page, limit, Direction.valueOf(direction), orderBy);
+		return repository.findAll(pageRequest);
 	}
 }

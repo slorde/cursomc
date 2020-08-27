@@ -1,6 +1,9 @@
-package com.fsoft.cursomc;
+package com.fsoft.cursomc.dto;
 
 import java.io.Serializable;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
 
 import com.fsoft.cursomc.models.Categoria;
 
@@ -9,6 +12,9 @@ public class CategoriaDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
+	
+	@NotEmpty(message="Nome deve ser informado")
+	@Length(min=5, max=80, message="Tamanho deve ser entre 5 e 80")
 	private String nome;
 	
 	public CategoriaDTO() {}
