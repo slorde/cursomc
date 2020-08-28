@@ -1,41 +1,43 @@
 package com.fsoft.cursomc.services.validation;
 
+import static org.springframework.web.servlet.HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fsoft.cursomc.controllers.exception.FieldMessage;
-import com.fsoft.cursomc.dto.ClienteNewDTO;
-import com.fsoft.cursomc.models.enums.TipoCliente;
+import com.fsoft.cursomc.dto.ClienteDTO;
+import com.fsoft.cursomc.models.Cliente;
 import com.fsoft.cursomc.repositories.ClienteRepository;
 
-public class ClienteInsertValidator implements ConstraintValidator<ClienteInsert, ClienteNewDTO>{
+public class ClienteUpdateValidator implements ConstraintValidator<ClienteUpdate, ClienteDTO>{
 
 	@Autowired
 	private ClienteRepository repository;
 	
+	@Autowired
+	private HttpServletRequest req;
+	
 	@Override
-	public void initialize(ClienteInsert constraintAnnotation) {
+	public void initialize(ClienteUpdate constraintAnnotation) {
 	}
 	
 	@Override
-	public boolean isValid(ClienteNewDTO dto, ConstraintValidatorContext context) {
+	public boolean isValid(ClienteDTO dto, ConstraintValidatorContext context) {
 		List<FieldMessage> list = new ArrayList<>();
 
-		if (dto.getTipoCliente() == null) 
-			list.add(new FieldMessage("tipo", "Tipo não pode ser nulo"));
-		
-		if (dto.getTipoCliente().equals(TipoCliente.FISICA.getCodigo()) && dto.getCpfOuCnpj().length() != 11)
-			list.add(new FieldMessage("cpfOuCnpj", "cpf inválido"));
-		
-		if (dto.getTipoCliente().equals(TipoCliente.JURIDICA.getCodigo()) && dto.getCpfOuCnpj().length() != 14)
-			list.add(new FieldMessage("cpfOuCnpj", "cnpj inválido"));
-		
-		if (repository.findByEmail(dto.getEmail()) != null) {
+		@SuppressWarnings("unchecked")
+		Map<String, String> map =  (Map<String, String>) req.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+		Integer uriId = Integer.parseInt(map.get("id"));
+		Cliente clienteEmail = repository.findByEmail(dto.getEmail());
+		if (clienteEmail != null && !clienteEmail.getId().equals(uriId)) {
 			list.add(new FieldMessage("email", "email já existente"));
 		}
 		

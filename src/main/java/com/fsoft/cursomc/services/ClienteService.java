@@ -21,6 +21,7 @@ import com.fsoft.cursomc.exceptions.NotFoundException;
 import com.fsoft.cursomc.models.Cidade;
 import com.fsoft.cursomc.models.Cliente;
 import com.fsoft.cursomc.models.Endereco;
+import com.fsoft.cursomc.models.enums.TipoCliente;
 import com.fsoft.cursomc.repositories.ClienteRepository;
 import com.fsoft.cursomc.repositories.EnderecoRepository;
 
@@ -46,7 +47,7 @@ public class ClienteService {
 	@Transactional
 	public Cliente fromDTO(ClienteNewDTO clienteNewDTO) {
 		Cliente cliente = new Cliente(clienteNewDTO.getNome(), clienteNewDTO.getEmail(), clienteNewDTO.getCpfOuCnpj(),
-				clienteNewDTO.getTipoCliente());
+				TipoCliente.toEnum(clienteNewDTO.getTipoCliente()));
 		
 		Cidade cidade = new Cidade();
 		cidade.setId(clienteNewDTO.getCidadeId());

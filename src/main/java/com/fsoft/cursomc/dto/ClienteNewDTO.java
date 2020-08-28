@@ -7,7 +7,6 @@ import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.fsoft.cursomc.models.enums.TipoCliente;
 import com.fsoft.cursomc.services.validation.ClienteInsert;
 
 @ClienteInsert
@@ -25,7 +24,7 @@ public class ClienteNewDTO implements Serializable {
 	
 	@NotEmpty(message = "Deve ser informado cpf ou cnpj")
 	private String cpfOuCnpj;
-	private TipoCliente tipoCliente;
+	private Integer tipoCliente;
 	
 	private String logradouro;
 	private String numero;
@@ -63,11 +62,11 @@ public class ClienteNewDTO implements Serializable {
 		this.cpfOuCnpj = cpfOuCnpj;
 	}
 
-	public TipoCliente getTipoCliente() {
+	public Integer getTipoCliente() {
 		return tipoCliente;
 	}
 
-	public void setTipoCliente(TipoCliente tipoCliente) {
+	public void setTipoCliente(Integer tipoCliente) {
 		this.tipoCliente = tipoCliente;
 	}
 

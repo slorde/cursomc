@@ -83,17 +83,20 @@ public class CursomcApplication implements CommandLineRunner {
 		Produto produto1 = new Produto("produto 1", 11.2d);
 		Produto produto2 = new Produto("produto 2", 10000.2d);
 		Produto produto3 = new Produto("produto 3", 55551.25d);
+		Produto produto4 = new Produto("produto 4", 100d);
 
 		categoria1.addProduto(produto1);
 		categoria1.addProduto(produto2);
 		categoria1.addProduto(produto3);
 
 		categoria2.addProduto(produto2);
+		categoria2.addProduto(produto4);
 
 		produto1.addCategoria(categoria1);
 		produto2.addCategoria(categoria1);
 		produto3.addCategoria(categoria2);
 		produto3.addCategoria(categoria1);
+		produto4.addCategoria(categoria2);
 
 		categoriaRespository.saveAll(Arrays.asList(categoria1, 
 				categoria2,
@@ -105,7 +108,7 @@ public class CursomcApplication implements CommandLineRunner {
 				categoria8,
 				categoria9,
 				categoria0));
-		produtoRepository.saveAll(Arrays.asList(produto1, produto2, produto3));
+		produtoRepository.saveAll(Arrays.asList(produto1, produto2, produto3, produto4));
 
 		Estado estado1 = new Estado("Paraná");
 		Estado estado2 = new Estado("Goiás");
