@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.fsoft.cursomc.models.Categoria;
@@ -21,6 +22,7 @@ import com.fsoft.cursomc.models.PagamentoComCartao;
 import com.fsoft.cursomc.models.Pedido;
 import com.fsoft.cursomc.models.Produto;
 import com.fsoft.cursomc.models.enums.EstadoPagamento;
+import com.fsoft.cursomc.models.enums.Perfil;
 import com.fsoft.cursomc.models.enums.TipoCliente;
 import com.fsoft.cursomc.repositories.CategoriaRepository;
 import com.fsoft.cursomc.repositories.CidadeRepository;
@@ -60,6 +62,9 @@ public class DBService {
 	
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
+	
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	public void instantiateTestDataBase() throws ParseException {
 		Categoria categoria1 = new Categoria("opa");
@@ -117,12 +122,13 @@ public class DBService {
 		estadoRepository.saveAll(Arrays.asList(estado1, estado2));
 		cidadeRepository.saveAll(Arrays.asList(cidade1, cidade2, cidade3));
 
-		Cliente cliente1 = new Cliente("FISICA", "slorde2@gmail.com", "55555555555", TipoCliente.FISICA);
+		Cliente cliente1 = new Cliente("FISICA", "teste@gmail.com", "55555555555", TipoCliente.FISICA, bCryptPasswordEncoder.encode("teste"));
 		cliente1.addTelefone("999999999");
 
-		Cliente cliente2 = new Cliente("JURIDICA", "slorde2@gmail.com", "12345678901234", TipoCliente.JURIDICA);
+		Cliente cliente2 = new Cliente("JURIDICA", "slorde2@gmail.com", "12345678901234", TipoCliente.JURIDICA, bCryptPasswordEncoder.encode("12356"));
 		cliente2.addTelefone("555555555");
 		cliente2.addTelefone("34321234");
+		cliente2.addPerfil(Perfil.ADMIN);
 
 		Endereco endereco1 = new Endereco("Rua josé", "123", "fundo", "centro", "86900000", cliente1, cidade1);
 		cliente1.addEndereco(endereco1);

@@ -1,21 +1,26 @@
 package com.fsoft.cursomc.models;
 
+import static com.fsoft.cursomc.models.enums.Perfil.CLIENTE;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fsoft.cursomc.models.enums.Perfil;
 import com.fsoft.cursomc.models.enums.TipoCliente;
 
 @Entity
@@ -28,6 +33,8 @@ public class Cliente implements Serializable {
 	private Integer id;
 	
 	private String nome;
+	@JsonIgnore
+	private String senha;
 	private String email;
 	private String cpfOuCnpj;
 	private Integer tipoCliente;
@@ -43,14 +50,20 @@ public class Cliente implements Serializable {
 	@JsonIgnore
 	private List<Pedido> pedidos = new ArrayList<>();
 	
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name="PERFIL")
+	private Set<Integer> perfis = new HashSet<>();
+	
 	public Cliente() {}
 
-	public Cliente(String nome, String email, String cpfOuCnpj, TipoCliente tipoCliente) {
+	public Cliente(String nome, String email, String cpfOuCnpj, TipoCliente tipoCliente, String senha) {
 		super();
 		this.nome = nome;
 		this.email = email;
 		this.cpfOuCnpj = cpfOuCnpj;
 		this.tipoCliente = tipoCliente == null ? null : tipoCliente.getCodigo();
+		this.senha = senha;
+		addPerfil(CLIENTE);
 	}
 
 	public Integer getId() {
@@ -67,6 +80,14 @@ public class Cliente implements Serializable {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+	
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	public String getEmail() {
@@ -115,6 +136,14 @@ public class Cliente implements Serializable {
 
 	public void addPedido(Pedido pedido) {
 		this.pedidos.add(pedido);
+	}
+	
+	public Set<Perfil> getPerfis() {
+		return perfis.stream().map(perfil -> Perfil.toEnum(perfil)).collect(Collectors.toSet());
+	}
+	
+	public void addPerfil(Perfil perfil) {
+		perfis.add(perfil.getCodigo());
 	}
 
 	@Override
