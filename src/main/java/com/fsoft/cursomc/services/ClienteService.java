@@ -17,14 +17,17 @@ import org.springframework.stereotype.Service;
 
 import com.fsoft.cursomc.dto.ClienteDTO;
 import com.fsoft.cursomc.dto.ClienteNewDTO;
+import com.fsoft.cursomc.exceptions.AuthorizationException;
 import com.fsoft.cursomc.exceptions.DataIntegrityException;
 import com.fsoft.cursomc.exceptions.NotFoundException;
 import com.fsoft.cursomc.models.Cidade;
 import com.fsoft.cursomc.models.Cliente;
 import com.fsoft.cursomc.models.Endereco;
+import com.fsoft.cursomc.models.enums.Perfil;
 import com.fsoft.cursomc.models.enums.TipoCliente;
 import com.fsoft.cursomc.repositories.ClienteRepository;
 import com.fsoft.cursomc.repositories.EnderecoRepository;
+import com.fsoft.cursomc.security.UserSS;
 
 @Service
 public class ClienteService {
@@ -39,8 +42,13 @@ public class ClienteService {
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	public Cliente find(Integer id) {
-		Optional<Cliente> cliente = repository.findById(id);
 
+		UserSS user = UserService.authenticated();
+		if (user == null || (!user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())))
+			throw new AuthorizationException("Acesso negado");
+		
+		Optional<Cliente> cliente = repository.findById(id);
+		
 		return cliente.orElseThrow(() -> new NotFoundException(format("Cliente não encontrada para o id [%d]", id)));
 	}
 

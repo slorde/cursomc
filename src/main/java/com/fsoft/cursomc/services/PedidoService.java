@@ -10,10 +10,15 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fsoft.cursomc.exceptions.AuthorizationException;
 import com.fsoft.cursomc.exceptions.NotFoundException;
+import com.fsoft.cursomc.models.Cliente;
 import com.fsoft.cursomc.models.ItemPedido;
 import com.fsoft.cursomc.models.PagamentoComBoleto;
 import com.fsoft.cursomc.models.Pedido;
@@ -21,6 +26,7 @@ import com.fsoft.cursomc.models.Produto;
 import com.fsoft.cursomc.repositories.ItemPedidoRepository;
 import com.fsoft.cursomc.repositories.PagamentoRepository;
 import com.fsoft.cursomc.repositories.PedidoRepository;
+import com.fsoft.cursomc.security.UserSS;
 
 @Service
 public class PedidoService {
@@ -81,5 +87,17 @@ public class PedidoService {
 		emailService.sendHtmlEmail(pedido);
 		
 		return pedido;
+	}
+	
+	public Page<Pedido> findPage(Integer page, Integer limit, String orderBy, String direction) {
+		UserSS user = UserService.authenticated();
+		if (user == null)
+			throw new AuthorizationException("Acesso Negado");
+		
+		PageRequest pageRequest = PageRequest.of(page, limit, Direction.valueOf(direction), orderBy);
+		
+		Cliente cliente = clienteService.find(user.getId());
+		
+		return repository.findByCliente(cliente, pageRequest);
 	}
 }

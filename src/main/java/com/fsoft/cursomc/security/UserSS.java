@@ -68,4 +68,8 @@ public class UserSS implements UserDetails {
 		this.senha = senha;
 		this.authorities = perfis.stream().map(perfil -> new SimpleGrantedAuthority(perfil.getDescricao())).collect(Collectors.toList());
 	}
+
+	public boolean hasRole(Perfil admin) {
+		return authorities.contains(new SimpleGrantedAuthority(admin.getDescricao()));
+	}
 }
